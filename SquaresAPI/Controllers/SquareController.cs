@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SquaresAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class SquareController : ControllerBase
     {
