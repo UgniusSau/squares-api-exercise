@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Data.DB.CoordinatesDB;
 using Repository.Repositories.Coordinates;
 using Services.PointsService;
+using Services.SquareService;
 
 namespace SquaresAPI
 {
@@ -18,6 +19,7 @@ namespace SquaresAPI
 
             builder.Services.AddScoped<ICoordinatesRepository, CoordinatesRepository>();
             builder.Services.AddScoped<IPointsService, PointsService>();
+            builder.Services.AddScoped<ISquareService, SquareService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

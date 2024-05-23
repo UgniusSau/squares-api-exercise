@@ -53,7 +53,7 @@ namespace Services.PointsService
                                      .Select(g => g.Key)
                                      .ToList();
 
-            if (duplicates.Any())
+            if (duplicates.Count != 0)
             {
                 throw new Exception("Duplicate found");
             }

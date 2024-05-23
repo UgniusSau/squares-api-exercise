@@ -10,13 +10,14 @@ namespace SquaresAPI.Controllers
     public class PointsController : ControllerBase
     {
         private readonly IPointsService _pointsService;
+
         public PointsController(IPointsService pointsService)
         {
             _pointsService = pointsService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPoints()
         {
             try
             {
@@ -36,7 +37,7 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] PointDTO point)
+        public async Task<IActionResult> CreatePoint([FromBody] PointDTO point)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] PointDTO point)
+        public async Task<IActionResult> DeletePoint([FromBody] PointDTO point)
         {
             try
             {
@@ -73,12 +74,12 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpPost("import")]
-        public async Task<IActionResult> Import([FromBody] IEnumerable<PointDTO> points)
+        public async Task<IActionResult> ImportPointsList([FromBody] IEnumerable<PointDTO> points)
         {
             try
             {
                 await _pointsService.ImportPoints(points);
-                return Ok();
+                return Ok("Imported succesfully");
             }
             catch(Exception ex)
             {
