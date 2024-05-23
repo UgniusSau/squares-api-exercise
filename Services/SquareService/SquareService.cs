@@ -19,24 +19,29 @@ namespace Services.SquareService
             _coordinatesRepository = coordinatesRepository;
         }
 
-        public async Task<int> DetectSquares()
+        public async Task<int> DetectSquares(CancellationToken cancellationToken)
         {
-            var points = await _coordinatesRepository.GetPoints();
+            var points = await _coordinatesRepository.GetPoints(cancellationToken);
 
-            if (!points.Any() || points.Count() < 4)
+            var uniquePoints = points.DistinctBy(p => (p.X, p.Y)).ToList();
+
+            if (uniquePoints.Count == 0 || uniquePoints.Count < 4)
             {
                 throw new Exception("Not enough points");
             }
 
             var squares = new HashSet<Square>();
-            var pointSet = new HashSet<(int, int)>(points.Select(p => (p.X, p.Y)));
+            var pointSet = new HashSet<(int, int)>(uniquePoints.Select(p => (p.X, p.Y)));
 
-            for (int i = 0; i < points.Count(); i++)
+            //algorithm mathematical implementation: https://www.youtube.com/watch?v=gib7vkeEIR4 
+            for (int i = 0; i < uniquePoints.Count; i++)
             {
-                for (int j = i + 1; j < points.Count(); j++)
+                for (int j = i + 1; j < uniquePoints.Count; j++)
                 {
-                    var p1 = points.ElementAt(i);
-                    var p2 = points.ElementAt(j);
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var p1 = uniquePoints.ElementAt(i);
+                    var p2 = uniquePoints.ElementAt(j);
 
                     int dx = p2.X - p1.X;
                     int dy = p2.Y - p1.Y;

@@ -3,6 +3,8 @@ using Data.DB.CoordinatesDB;
 using Repository.Repositories.Coordinates;
 using Services.PointsService;
 using Services.SquareService;
+using SquaresAPI.Middleware;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace SquaresAPI
 {
@@ -51,9 +53,10 @@ namespace SquaresAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseMiddleware<RequestTimeoutMiddleware>(5);
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

@@ -16,11 +16,11 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _squareService.DetectSquares();
+                var response = await _squareService.DetectSquares(cancellationToken);
                 return Ok(response);
             }
             catch (Exception ex)

@@ -19,29 +19,29 @@ namespace Services.PointsService
             _coordinatesRepository = coordinatesRepository;
         }
 
-        public async Task<IEnumerable<Point>> GetPoints()
+        public async Task<IEnumerable<Point>> GetPoints(CancellationToken cancellationToken)
         {
-            return await _coordinatesRepository.GetPoints();
+            return await _coordinatesRepository.GetPoints(cancellationToken);
         }
 
-        public async Task AddPoint(PointDTO pointDto)
+        public async Task AddPoint(PointDTO pointDto, CancellationToken cancellationToken)
         {
-            var existingPoints = await _coordinatesRepository.GetPoints();
+            var existingPoints = await _coordinatesRepository.GetPoints(cancellationToken);
             if (existingPoints.Any(p => p.X == pointDto.X && p.Y == pointDto.Y))
             {
                 throw new Exception("Point already exists");
             }
 
             var newPoint = new Point { X = pointDto.X, Y = pointDto.Y };
-            await _coordinatesRepository.AddPoint(newPoint);
+            await _coordinatesRepository.AddPoint(newPoint, cancellationToken);
         }
 
-        public async Task<bool> DeletePoint(PointDTO pointDto)
+        public async Task<bool> DeletePoint(PointDTO pointDto, CancellationToken cancellationToken)
         {
-            return await _coordinatesRepository.DeletePoint(pointDto.X, pointDto.Y);
+            return await _coordinatesRepository.DeletePoint(pointDto.X, pointDto.Y, cancellationToken);
         }
 
-        public async Task ImportPoints(IEnumerable<PointDTO> pointsDto)
+        public async Task ImportPoints(IEnumerable<PointDTO> pointsDto, CancellationToken cancellationToken)
         {
             if (pointsDto == null || !pointsDto.Any())
             {
@@ -59,7 +59,7 @@ namespace Services.PointsService
             }
 
             var points = pointsDto.Select(p => new Point { X = p.X, Y = p.Y });
-            await _coordinatesRepository.ImportPoints(points);
+            await _coordinatesRepository.ImportPoints(points, cancellationToken);
         }
     }
 }

@@ -8,6 +8,6 @@ namespace Services.SquareService
 {
     public interface ISquareService
     {
-        Task<int> DetectSquares();
+        Task<int> DetectSquares(CancellationToken cancellationToken);
     }
 }

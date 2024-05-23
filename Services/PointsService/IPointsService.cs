@@ -10,12 +10,12 @@ namespace Services.PointsService
 {
     public interface IPointsService
     {
-        Task<IEnumerable<Point>> GetPoints();
+        Task<IEnumerable<Point>> GetPoints(CancellationToken cancellationToken);
 
-        Task AddPoint(PointDTO pointDto);
+        Task AddPoint(PointDTO pointDto, CancellationToken cancellationToken);
 
-        Task<bool> DeletePoint(PointDTO pointDto);
+        Task<bool> DeletePoint(PointDTO pointDto, CancellationToken cancellationToken);
 
-        Task ImportPoints(IEnumerable<PointDTO> points);
+        Task ImportPoints(IEnumerable<PointDTO> points, CancellationToken cancellationToken);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Repository.Repositories.Coordinates;
 using Services.PointsService;
+using System.Threading;
 
 namespace SquaresAPI.Controllers
 {
@@ -17,11 +18,11 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPoints()
+        public async Task<IActionResult> GetPoints(CancellationToken cancellationToken)
         {
             try
             {
-                var response = await _pointsService.GetPoints();
+                var response = await _pointsService.GetPoints(cancellationToken);
 
                 if (response == null)
                 {
@@ -30,18 +31,22 @@ namespace SquaresAPI.Controllers
 
                 return Ok(response);
             }
-            catch
+            catch (Exception ex) when (ex is TaskCanceledException)
             {
-                return StatusCode(500, "Try again later");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Try again later {ex.Message}");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePoint([FromBody] PointDTO point)
+        public async Task<IActionResult> CreatePoint([FromBody] PointDTO point, CancellationToken cancellationToken)
         {
             try
             {
-                await _pointsService.AddPoint(point);
+                await _pointsService.AddPoint(point, cancellationToken);
                
                 return Ok("Added succesfully");
             }
@@ -56,11 +61,11 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeletePoint([FromBody] PointDTO point)
+        public async Task<IActionResult> DeletePoint([FromBody] PointDTO point, CancellationToken cancellationToken)
         {
             try
             {
-                var success = await _pointsService.DeletePoint(point);
+                var success = await _pointsService.DeletePoint(point, cancellationToken);
                 if (!success)
                 {
                     return NotFound();
@@ -74,11 +79,11 @@ namespace SquaresAPI.Controllers
         }
 
         [HttpPost("import")]
-        public async Task<IActionResult> ImportPointsList([FromBody] IEnumerable<PointDTO> points)
+        public async Task<IActionResult> ImportPointsList([FromBody] IEnumerable<PointDTO> points, CancellationToken cancellationToken)
         {
             try
             {
-                await _pointsService.ImportPoints(points);
+                await _pointsService.ImportPoints(points, cancellationToken);
                 return Ok("Imported succesfully");
             }
             catch(Exception ex)
