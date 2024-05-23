@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  squaresapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__CoordinatesDBConnection=Server=sql-server;Database=CoordinatesDB;User Id=sa;Password=My!P@ssw0rd1a;Encrypt=False
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+  
+  sql-server:
+    environment:
+      - SA_PASSWORD=My!P@ssw0rd1a
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
+    

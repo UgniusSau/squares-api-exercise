@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  squaresapi:
+    image: ${DOCKER_REGISTRY-}squaresapi
+    build:
+      context: .
+      dockerfile: SquaresAPI/Dockerfile
+    depends_on:
+      - sql-server
+  
+  sql-server:
+    image: mcr.microsoft.com/mssql/server
